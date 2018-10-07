@@ -1,15 +1,15 @@
 {
-  "name": "react-inline-editing",
-  "version": "1.0.9",
+  "name": "react-inline-edition",
+  "version": "1.0.0",
   "description": "An inline, customizable and editable text component built in React.",
   "main": "./dist/main.bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run node_modules/webpack/bin/webpack"
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bfischer/react-inline-editing.git"
+    "url": "git+https://github.com/NastuzziSamy/react-inline-edition.git"
   },
   "keywords": [
     "react",
@@ -25,10 +25,10 @@
     "label",
     "labels"
   ],
-  "author": "Blake Fischer",
+  "author": "Samy NASTUZZI",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bfischer/react-inline-editing/issues"
+    "url": "git+https://github.com/NastuzziSamy/react-inline-edition/issues"
   },
   "homepage": "",
   "dependencies": {
@@ -45,6 +45,6 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
-    "webpack": "^3.10.0"
+    "webpack": "^3.12.0"
   }
 }

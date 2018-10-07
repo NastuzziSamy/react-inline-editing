@@ -6,10 +6,10 @@ The `<EditableLabel />` allows the user to simply click and edit text inline. It
 ![example](https://i.imgur.com/pvvQWU3.gif )
 
 # Installation
-`npm install --save react-inline-editing`
+`npm install --save react-inline-edition`
 
 # Component props
-_* Required_ 
+_* Required_
 
 | Prop | Type   | Description
 | -----| -------| -------- |
@@ -18,14 +18,14 @@ _* Required_
 | emptyEdit | bool | Flags whether the label should be in editor mode when text is empty('' or undefined)
 | labelPlaceHolder | string | Label value to display when text is not present
 | labelClassName | string | Class name for the text styling
-| labelFontSize | string | Font size for the text 
+| labelFontSize | string | Font size for the text
 | labelFontWeight | string | Font weight for the text
 | inputMaxLength | number | Max length for the input in editing mode
 | inputPlaceHolder | string | Placeholder for the input in editing mode
 | inputWidth | string | Width of the input in editing mode
 | inputHeight | string | Height of the input in editing mode
 | inputFontSize | string | Font size for the input in editing mode
-| inputFontWeight | string | Font weight for the input in editing mode 
+| inputFontWeight | string | Font weight for the input in editing mode
 | inputClassName | string | Class name for the input editor's styling
 | inputBorderWidth | string | Border width for the input in editing mode
 | onFocus | function | Callback for text focusing. Parameter(s): `text`
@@ -76,3 +76,4 @@ ReactDOM.render(
   document.getElementById('container')
 );
 ```
+# Based on the work of ![cheekujha](https://github.com/cheekujha/react-inline-edition)
