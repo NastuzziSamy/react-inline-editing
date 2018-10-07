@@ -314,6 +314,7 @@ var EditableLabel = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (EditableLabel.__proto__ || Object.getPrototypeOf(EditableLabel)).call(this, props));
 
         _this.state = {
+            isBlock: _this.props.isBlock,
             isEditable: _this.props.isEditable != false,
             isEditing: _this.props.isEditing || false,
             text: _this.props.text || ""
@@ -329,6 +330,7 @@ var EditableLabel = function (_React$Component) {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(nextProps) {
             this.setState({
+                isBlock: nextProps.isBlock,
                 text: nextProps.text || "",
                 isEditable: nextProps.isEditable != false,
                 isEditing: this.state.isEditing || nextProps.isEditing || false
@@ -393,49 +395,44 @@ var EditableLabel = function (_React$Component) {
             var _this2 = this;
 
             if (this.state.isEditable && this.state.isEditing) {
+                return _react2.default.createElement('input', { type: 'text',
+                    className: this.props.inputClassName,
+                    ref: function ref(input) {
+                        _this2.textInput = input;
+                    },
+                    value: this.state.text,
+                    onChange: this._handleChange,
+                    onBlur: this._handleFocus,
+                    onKeyDown: this._handleKeyDown,
+                    style: {
+                        width: this.props.inputWidth,
+                        height: this.props.inputHeight,
+                        fontSize: this.props.inputFontSize,
+                        fontWeight: this.props.inputFontWeight,
+                        borderWidth: this.props.inputBorderWidth
+
+                    },
+                    maxLength: this.props.inputMaxLength,
+                    placeholder: this.props.inputPlaceHolder,
+                    tabIndex: this.props.inputTabIndex,
+                    autoFocus: true
+                });
+            } else {
+                var labelText = this._isTextValueValid() ? this.state.text : this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER;
+
+                var style = {
+                    fontSize: this.props.labelFontSize,
+                    fontWeight: this.props.labelFontWeight
+                };
+
                 return _react2.default.createElement(
-                    'div',
-                    null,
-                    _react2.default.createElement('input', { type: 'text',
-                        className: this.props.inputClassName,
-                        ref: function ref(input) {
-                            _this2.textInput = input;
-                        },
-                        value: this.state.text,
-                        onChange: this._handleChange,
-                        onBlur: this._handleFocus,
-                        onKeyDown: this._handleKeyDown,
-                        style: {
-                            width: this.props.inputWidth,
-                            height: this.props.inputHeight,
-                            fontSize: this.props.inputFontSize,
-                            fontWeight: this.props.inputFontWeight,
-                            borderWidth: this.props.inputBorderWidth
-
-                        },
-                        maxLength: this.props.inputMaxLength,
-                        placeholder: this.props.inputPlaceHolder,
-                        tabIndex: this.props.inputTabIndex,
-                        autoFocus: true })
-                );
-            }
-
-            var labelText = this._isTextValueValid() ? this.state.text : this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER;
-            var style = {
-                fontSize: this.props.labelFontSize,
-                fontWeight: this.props.labelFontWeight
-            };
-            return _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(
                     'label',
                     { className: this.props.labelClassName,
                         onClick: this._handleFocus,
                         style: style },
                     labelText
-                )
-            );
+                );
+            }
         }
     }]);
 

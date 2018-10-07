@@ -9,10 +9,12 @@ export default class EditableLabel extends React.Component {
         super(props);
 
         this.state = {
+            isBlock: this.props.isBlock,
+            isEditable: this.props.isEditable != false,
         	isEditing: this.props.isEditing || false,
 			text: this.props.text || "",
         };
-        
+
         this._handleFocus = this._handleFocus.bind(this);
         this._handleChange = this._handleChange.bind(this);
         this._handleKeyDown = this._handleKeyDown.bind(this);
@@ -20,17 +22,19 @@ export default class EditableLabel extends React.Component {
 
     componentWillReceiveProps(nextProps){
         this.setState({
+            isBlock: nextProps.isBlock,
             text: nextProps.text || "",
+            isEditable: nextProps.isEditable != false,
             isEditing: this.state.isEditing || nextProps.isEditing || false
         });
     }
-    
+
     _isTextValueValid(){
         return (typeof this.state.text != "undefined" && this.state.text.trim().length > 0);
     }
-    
+
     _handleFocus() {
-        if(this.state.isEditing) {
+        if (this.state.isEditing) {
             if(typeof this.props.onFocusOut === 'function') {
                 this.props.onFocusOut(this.state.text);
             }
@@ -57,7 +61,7 @@ export default class EditableLabel extends React.Component {
             }
         }
     }
-	
+
     _handleChange() {
     	this.setState({
         	text: this.textInput.value,
@@ -75,47 +79,53 @@ export default class EditableLabel extends React.Component {
     }
 
     render() {
-    	if(this.state.isEditing) {
-        	return <div>
-        	    <input type="text" 
+    	if (this.state.isEditable && this.state.isEditing) {
+            return (
+                <input type="text"
                     className={this.props.inputClassName}
                     ref={(input) => { this.textInput = input; }}
-                    value={this.state.text} 
+                    value={this.state.text}
                     onChange={this._handleChange}
                     onBlur={this._handleFocus}
                     onKeyDown={this._handleKeyDown}
-                    style={{ 
+                    style={{
                     	width: this.props.inputWidth,
                         height: this.props.inputHeight,
                         fontSize: this.props.inputFontSize,
                         fontWeight: this.props.inputFontWeight,
                         borderWidth: this.props.inputBorderWidth,
-               			
+
                     }}
                     maxLength={this.props.inputMaxLength}
                     placeholder={this.props.inputPlaceHolder}
                     tabIndex={this.props.inputTabIndex}
-                    autoFocus/>
-        	</div>
+                    autoFocus
+                />
+            );
         }
-        
-        const labelText = this._isTextValueValid() ? this.state.text : (this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER);
-        return <div>
-            <label className={this.props.labelClassName}
-                onClick={this._handleFocus}
-                style={{
-                	fontSize: this.props.labelFontSize,
-                    fontWeight: this.props.labelFontWeight,
-                }}>
-                {labelText}
-            </label>
-        </div>;
+        else {
+            const labelText = this._isTextValueValid() ? this.state.text : (this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER);
+
+            var style = {
+                fontSize: this.props.labelFontSize,
+                fontWeight: this.props.labelFontWeight,
+            };
+
+            return (
+                <label className={this.props.labelClassName}
+                    onClick={this._handleFocus}
+                    style={ style }>
+                    {labelText}
+                </label>
+            );
+        }
     }
 }
 
 EditableLabel.propTypes = {
     text: PropTypes.string.isRequired,
     isEditing: PropTypes.bool,
+    isEditable: PropTypes.bool,
     emptyEdit: PropTypes.bool,
     labelPlaceHolder: PropTypes.string,
 
@@ -136,6 +146,3 @@ EditableLabel.propTypes = {
     onFocus: PropTypes.func,
     onFocusOut: PropTypes.func
 };
-
-
-
