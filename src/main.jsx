@@ -13,6 +13,7 @@ export default class EditableLabel extends React.Component {
             isEditable: this.props.isEditable != false,
         	isEditing: this.props.isEditing || false,
 			text: this.props.text || "",
+            style: {},
         };
 
         this._handleFocus = this._handleFocus.bind(this);
@@ -85,6 +86,7 @@ export default class EditableLabel extends React.Component {
                     className={this.props.inputClassName}
                     ref={(input) => { this.textInput = input; }}
                     value={this.state.text}
+                    onMouseOut={() => { this.setState(prevState => ({ ...prevState, style: {}})) }}
                     onChange={this._handleChange}
                     onBlur={this._handleFocus}
                     onKeyDown={this._handleKeyDown}
@@ -106,13 +108,15 @@ export default class EditableLabel extends React.Component {
         else {
             const labelText = this._isTextValueValid() ? this.state.text : (this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER);
 
-            var style = {
+            const style = Object.assign({
                 fontSize: this.props.labelFontSize,
                 fontWeight: this.props.labelFontWeight,
-            };
+            }, this.state.style);
 
             return (
                 <label className={this.props.labelClassName}
+                    onMouseOver={() => { this.state.isEditable && this.setState(prevState => ({ ...prevState, style: { backgroundColor: '#AAA' }})) }}
+                    onMouseOut={() => { this.setState(prevState => ({ ...prevState, style: {}})) }}
                     onClick={this._handleFocus}
                     style={ style }>
                     {labelText}

@@ -284,6 +284,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(3);
@@ -317,7 +319,8 @@ var EditableLabel = function (_React$Component) {
             isBlock: _this.props.isBlock,
             isEditable: _this.props.isEditable != false,
             isEditing: _this.props.isEditing || false,
-            text: _this.props.text || ""
+            text: _this.props.text || "",
+            style: {}
         };
 
         _this._handleFocus = _this._handleFocus.bind(_this);
@@ -401,6 +404,11 @@ var EditableLabel = function (_React$Component) {
                         _this2.textInput = input;
                     },
                     value: this.state.text,
+                    onMouseOut: function onMouseOut() {
+                        _this2.setState(function (prevState) {
+                            return _extends({}, prevState, { style: {} });
+                        });
+                    },
                     onChange: this._handleChange,
                     onBlur: this._handleFocus,
                     onKeyDown: this._handleKeyDown,
@@ -420,14 +428,24 @@ var EditableLabel = function (_React$Component) {
             } else {
                 var labelText = this._isTextValueValid() ? this.state.text : this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER;
 
-                var style = {
+                var style = Object.assign({
                     fontSize: this.props.labelFontSize,
                     fontWeight: this.props.labelFontWeight
-                };
+                }, this.state.style);
 
                 return _react2.default.createElement(
                     'label',
                     { className: this.props.labelClassName,
+                        onMouseOver: function onMouseOver() {
+                            _this2.state.isEditable && _this2.setState(function (prevState) {
+                                return _extends({}, prevState, { style: { backgroundColor: '#AAA' } });
+                            });
+                        },
+                        onMouseOut: function onMouseOut() {
+                            _this2.setState(function (prevState) {
+                                return _extends({}, prevState, { style: {} });
+                            });
+                        },
                         onClick: this._handleFocus,
                         style: style },
                     labelText
