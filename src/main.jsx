@@ -115,7 +115,7 @@ export default class EditableLabel extends React.Component {
 
             return (
                 <label className={this.props.labelClassName}
-                    onMouseOver={() => { this.state.isEditable && this.setState(prevState => ({ ...prevState, style: { backgroundColor: '#AAA' }})) }}
+                    onMouseOver={() => { this.state.isEditable && this.setState(prevState => ({ ...prevState, style: { backgroundColor: '#AAAA' }})) }}
                     onMouseOut={() => { this.setState(prevState => ({ ...prevState, style: {}})) }}
                     onClick={this._handleFocus}
                     style={ style }>
