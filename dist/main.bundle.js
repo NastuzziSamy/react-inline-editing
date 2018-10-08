@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -275,224 +275,12 @@ module.exports = ReactPropTypesSecret;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(3);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = __webpack_require__(4);
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ENTER_KEY_CODE = 13;
-var DEFAULT_LABEL_PLACEHOLDER = "Click To Edit";
-
-var EditableLabel = function (_React$Component) {
-    _inherits(EditableLabel, _React$Component);
-
-    function EditableLabel(props) {
-        _classCallCheck(this, EditableLabel);
-
-        var _this = _possibleConstructorReturn(this, (EditableLabel.__proto__ || Object.getPrototypeOf(EditableLabel)).call(this, props));
-
-        _this.state = {
-            isBlock: _this.props.isBlock,
-            isEditable: _this.props.isEditable != false,
-            isEditing: _this.props.isEditing || false,
-            text: _this.props.text || "",
-            style: {}
-        };
-
-        _this._handleFocus = _this._handleFocus.bind(_this);
-        _this._handleChange = _this._handleChange.bind(_this);
-        _this._handleKeyDown = _this._handleKeyDown.bind(_this);
-        return _this;
-    }
-
-    _createClass(EditableLabel, [{
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(nextProps) {
-            this.setState({
-                isBlock: nextProps.isBlock,
-                text: nextProps.text || "",
-                isEditable: nextProps.isEditable != false,
-                isEditing: this.state.isEditing || nextProps.isEditing || false
-            });
-        }
-    }, {
-        key: '_isTextValueValid',
-        value: function _isTextValueValid() {
-            return typeof this.state.text != "undefined" && this.state.text.trim().length > 0;
-        }
-    }, {
-        key: '_handleFocus',
-        value: function _handleFocus() {
-            if (this.state.isEditing) {
-                if (typeof this.props.onFocusOut === 'function') {
-                    this.props.onFocusOut(this.state.text);
-                }
-            } else {
-                if (typeof this.props.onFocus === 'function') {
-                    this.props.onFocus(this.state.text);
-                }
-            }
-
-            if (this._isTextValueValid()) {
-                this.setState({
-                    isEditing: !this.state.isEditing
-                });
-            } else {
-                if (this.state.isEditing) {
-                    this.setState({
-                        isEditing: this.props.emptyEdit || false
-                    });
-                } else {
-                    this.setState({
-                        isEditing: true
-                    });
-                }
-            }
-        }
-    }, {
-        key: '_handleChange',
-        value: function _handleChange() {
-            this.setState({
-                text: this.textInput.value
-            });
-        }
-    }, {
-        key: '_handleKeyDown',
-        value: function _handleKeyDown(e) {
-            if (e.keyCode === ENTER_KEY_CODE) {
-                this._handleEnterKey();
-            }
-        }
-    }, {
-        key: '_handleEnterKey',
-        value: function _handleEnterKey() {
-            this._handleFocus();
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this2 = this;
-
-            if (this.state.isEditable && this.state.isEditing) {
-                return _react2.default.createElement('input', { type: 'text',
-                    className: this.props.inputClassName,
-                    ref: function ref(input) {
-                        _this2.textInput = input;
-                    },
-                    value: this.state.text,
-                    onMouseOut: function onMouseOut() {
-                        _this2.setState(function (prevState) {
-                            return _extends({}, prevState, { style: {} });
-                        });
-                    },
-                    onChange: this._handleChange,
-                    onBlur: this._handleFocus,
-                    onKeyDown: this._handleKeyDown,
-                    style: {
-                        width: this.props.inputWidth,
-                        height: this.props.inputHeight,
-                        fontSize: this.props.inputFontSize,
-                        fontWeight: this.props.inputFontWeight,
-                        borderWidth: this.props.inputBorderWidth
-
-                    },
-                    maxLength: this.props.inputMaxLength,
-                    placeholder: this.props.inputPlaceHolder,
-                    tabIndex: this.props.inputTabIndex,
-                    autoFocus: true
-                });
-            } else {
-                var labelText = this._isTextValueValid() ? this.state.text : this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER;
-
-                var style = Object.assign({
-                    fontSize: this.props.labelFontSize,
-                    fontWeight: this.props.labelFontWeight
-                }, this.state.style);
-
-                return _react2.default.createElement(
-                    'label',
-                    { className: this.props.labelClassName,
-                        onMouseOver: function onMouseOver() {
-                            _this2.state.isEditable && _this2.setState(function (prevState) {
-                                return _extends({}, prevState, { style: { backgroundColor: '#AAA' } });
-                            });
-                        },
-                        onMouseOut: function onMouseOut() {
-                            _this2.setState(function (prevState) {
-                                return _extends({}, prevState, { style: {} });
-                            });
-                        },
-                        onClick: this._handleFocus,
-                        style: style },
-                    labelText
-                );
-            }
-        }
-    }]);
-
-    return EditableLabel;
-}(_react2.default.Component);
-
-exports.default = EditableLabel;
-
-
-EditableLabel.propTypes = {
-    text: _propTypes2.default.string.isRequired,
-    isEditing: _propTypes2.default.bool,
-    isEditable: _propTypes2.default.bool,
-    emptyEdit: _propTypes2.default.bool,
-    labelPlaceHolder: _propTypes2.default.string,
-
-    labelClassName: _propTypes2.default.string,
-    labelFontSize: _propTypes2.default.string,
-    labelFontWeight: _propTypes2.default.string,
-
-    inputMaxLength: _propTypes2.default.number,
-    inputPlaceHolder: _propTypes2.default.string,
-    inputTabIndex: _propTypes2.default.number,
-    inputWidth: _propTypes2.default.string,
-    inputHeight: _propTypes2.default.string,
-    inputFontSize: _propTypes2.default.string,
-    inputFontWeight: _propTypes2.default.string,
-    inputClassName: _propTypes2.default.string,
-    inputBorderWidth: _propTypes2.default.string,
-
-    onFocus: _propTypes2.default.func,
-    onFocusOut: _propTypes2.default.func
-};
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = require("react");
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {/**
@@ -525,6 +313,33 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(3);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _editable = __webpack_require__(9);
+
+var _editable2 = _interopRequireDefault(_editable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _editable2.default;
 
 /***/ }),
 /* 5 */
@@ -1350,6 +1165,223 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(2);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(3);
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ENTER_KEY_CODE = 13;
+var DEFAULT_LABEL_PLACEHOLDER = "Click To Edit";
+
+var Editable = function (_React$Component) {
+    _inherits(Editable, _React$Component);
+
+    function Editable(props) {
+        _classCallCheck(this, Editable);
+
+        var _this = _possibleConstructorReturn(this, (Editable.__proto__ || Object.getPrototypeOf(Editable)).call(this, props));
+
+        _this.state = {
+            editZone: _this.props.editZone,
+            text: _this.props.text || "",
+            validateOnEnterKey: _this.props.validateOnEnterKey || _this.props.editZone === undefined,
+            isEditable: _this.props.isEditable != false,
+            isEditing: _this.props.isEditing || false,
+            isOver: false
+        };
+
+        _this._handleFocus = _this._handleFocus.bind(_this);
+        _this._handleChange = _this._handleChange.bind(_this);
+        _this._handleKeyDown = _this._handleKeyDown.bind(_this);
+        return _this;
+    }
+
+    _createClass(Editable, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            this.setState({
+                editZone: nextProps.editZone,
+                text: nextProps.text || "",
+                validateOnEnterKey: this.props.validateOnEnterKey || nextProps.editZone === undefined,
+                isEditable: nextProps.isEditable != false,
+                isEditing: this.state.isEditing || nextProps.isEditing || false
+            });
+        }
+    }, {
+        key: '_isTextValueValid',
+        value: function _isTextValueValid() {
+            return typeof this.state.text != "undefined" && this.state.text.trim().length > 0;
+        }
+    }, {
+        key: '_handleFocus',
+        value: function _handleFocus() {
+            if (this.state.isEditing) {
+                if (typeof this.props.onFocusOut === 'function') {
+                    this.props.onFocusOut(this.state.text);
+                }
+            } else if (typeof this.props.onFocus === 'function') {
+                this.props.onFocus(this.state.text);
+            }
+
+            if (this._isTextValueValid()) {
+                this.setState({
+                    isEditing: !this.state.isEditing
+                });
+            } else if (this.state.isEditing) {
+                this.setState({
+                    isEditing: this.props.emptyEdit || false
+                });
+            } else {
+                this.setState({
+                    isEditing: true
+                });
+            }
+        }
+    }, {
+        key: '_handleChange',
+        value: function _handleChange() {
+            this.setState({
+                text: this.textInput.value
+            });
+        }
+    }, {
+        key: '_handleKeyDown',
+        value: function _handleKeyDown(e) {
+            if (this.state.validateOnEnterKey && e.keyCode === ENTER_KEY_CODE) {
+                console.log(e, e.keyCode);
+                this._handleEnterKey();
+            }
+        }
+    }, {
+        key: '_handleEnterKey',
+        value: function _handleEnterKey() {
+            this._handleFocus();
+        }
+    }, {
+        key: '_getEditZone',
+        value: function _getEditZone(text) {
+            if (this.state.editZone) {
+                if (typeof this.state.editZone === 'function') {
+                    return this.state.editZone(text);
+                } else {
+                    return this.state.editZone;
+                }
+            } else {
+                return _react2.default.createElement('input', { type: 'text',
+                    value: text
+                });
+            }
+        }
+    }, {
+        key: '_getNormalZone',
+        value: function _getNormalZone(text) {
+            if (this.props.children) {
+                return this.props.children;
+            } else {
+                return _react2.default.createElement(
+                    'span',
+                    null,
+                    text
+                );
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            if (this.state.isEditable && this.state.isEditing) {
+                return _react2.default.cloneElement(this._getEditZone(this.state.text), {
+                    onMouseOut: function onMouseOut() {
+                        return _this2.setState({ isOver: false });
+                    },
+                    onChange: this._handleChange,
+                    onBlur: this._handleFocus,
+                    onKeyDown: this._handleKeyDown,
+                    autoFocus: true
+                });
+            } else {
+                var text = this._isTextValueValid() ? this.state.text : this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER;
+
+                var label = _react2.default.cloneElement(this._getNormalZone(text), {
+                    className: this.props.labelClassName,
+                    onMouseOver: function onMouseOver() {
+                        _this2.state.isEditable && _this2.setState({ isOver: true });
+                    },
+                    onMouseOut: function onMouseOut() {
+                        _this2.setState({ isOver: false });
+                    },
+                    onClick: this._handleFocus
+                });
+
+                if (this.state.isOver) {
+                    return _react2.default.createElement(
+                        'mark',
+                        null,
+                        label
+                    );
+                } else {
+                    return label;
+                }
+            }
+        }
+    }]);
+
+    return Editable;
+}(_react2.default.Component);
+
+exports.default = Editable;
+
+
+Editable.propTypes = {
+    text: _propTypes2.default.string.isRequired,
+    isEditing: _propTypes2.default.bool,
+    isEditable: _propTypes2.default.bool,
+    emptyEdit: _propTypes2.default.bool,
+    labelPlaceHolder: _propTypes2.default.string,
+
+    labelClassName: _propTypes2.default.string,
+    labelFontSize: _propTypes2.default.string,
+    labelFontWeight: _propTypes2.default.string,
+
+    inputMaxLength: _propTypes2.default.number,
+    inputPlaceHolder: _propTypes2.default.string,
+    inputTabIndex: _propTypes2.default.number,
+    inputWidth: _propTypes2.default.string,
+    inputHeight: _propTypes2.default.string,
+    inputFontSize: _propTypes2.default.string,
+    inputFontWeight: _propTypes2.default.string,
+    inputClassName: _propTypes2.default.string,
+    inputBorderWidth: _propTypes2.default.string,
+
+    onFocus: _propTypes2.default.func,
+    onFocusOut: _propTypes2.default.func
+};
 
 /***/ })
 /******/ ]);
