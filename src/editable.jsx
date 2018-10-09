@@ -82,30 +82,73 @@ export default class Editable extends React.Component {
 
     _getEditZone(text) {
         if (this.state.editZone) {
+            var editZone;
+
             if (typeof this.state.editZone === 'function') {
-                return this.state.editZone(text);
+                editZone = this.state.editZone(text);
             }
             else {
-                return this.state.editZone;
+                editZone = this.state.editZone;
             }
+
+            return (
+                <span
+                    onMouseOut={() => this.setState({ isOver: false })}
+                    onChange={ this._handleChange }
+                    onBlur={ this._handleFocus }
+                    onKeyDown={ this._handleKeyDown }
+                >
+                    { editZone }
+                </span>
+            );
         }
         else {
             return (
                 <input type="text"
                     value={ text }
+                    onMouseOut={() => this.setState({ isOver: false })}
+                    onChange={ this._handleChange }
+                    onBlur={ this._handleFocus }
+                    onKeyDown={ this._handleKeyDown }
+                    autoFocus
                 />
             );
         }
     }
 
     _getNormalZone(text) {
-        if (this.props.children) {
-            return this.props.children;
+        const zone = this.props.children || text;
+        var style = {
+            cursor: 'pointer',
+        };
+
+        if (typeof zone !== 'string') {
+            style.display = 'inherit';
+        }
+
+        const props = {
+            className: this.props.className,
+            onMouseOver: () => { this.state.isEditable && this.setState({ isOver: true }) },
+            onMouseOut: () => { this.setState({ isOver: false }) },
+            onClick: this._handleFocus,
+            style: style
+        };
+
+        if (this.state.isOver) {
+            return (
+                <mark
+                    { ...props }
+                >
+                    { zone }
+                </mark>
+            );
         }
         else {
             return (
-                <span>
-                    { text }
+                <span
+                    { ...props }
+                >
+                    { zone }
                 </span>
             );
         }
@@ -113,40 +156,12 @@ export default class Editable extends React.Component {
 
     render() {
     	if (this.state.isEditable && this.state.isEditing) {
-            return React.cloneElement(
-                this._getEditZone(this.state.text),
-                {
-                    onMouseOut: () => this.setState({ isOver: false }),
-                    onChange: this._handleChange,
-                    onBlur: this._handleFocus,
-                    onKeyDown: this._handleKeyDown,
-                    autoFocus: true,
-                }
-            );
+            return this._getEditZone(this.state.text);
         }
         else {
             const text = this._isTextValueValid() ? this.state.text : (this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER);
 
-            const label = React.cloneElement(
-                this._getNormalZone(text),
-                {
-                    className: this.props.labelClassName,
-                    onMouseOver: () => { this.state.isEditable && this.setState({ isOver: true }) },
-                    onMouseOut: () => { this.setState({ isOver: false }) },
-                    onClick: this._handleFocus,
-                }
-            );
-
-            if (this.state.isOver) {
-                return (
-                    <mark>
-                        { label }
-                    </mark>
-                );
-            }
-            else {
-                return label;
-            }
+            return this._getNormalZone(text);
         }
     }
 }

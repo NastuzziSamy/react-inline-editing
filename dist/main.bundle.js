@@ -1285,38 +1285,32 @@ var Editable = function (_React$Component) {
     }, {
         key: '_getEditZone',
         value: function _getEditZone(text) {
-            if (this.state.editZone) {
-                if (typeof this.state.editZone === 'function') {
-                    return this.state.editZone(text);
-                } else {
-                    return this.state.editZone;
-                }
-            } else {
-                return _react2.default.createElement('input', { type: 'text',
-                    value: text
-                });
-            }
-        }
-    }, {
-        key: '_getNormalZone',
-        value: function _getNormalZone(text) {
-            if (this.props.children) {
-                return this.props.children;
-            } else {
-                return _react2.default.createElement(
-                    'span',
-                    null,
-                    text
-                );
-            }
-        }
-    }, {
-        key: 'render',
-        value: function render() {
             var _this2 = this;
 
-            if (this.state.isEditable && this.state.isEditing) {
-                return _react2.default.cloneElement(this._getEditZone(this.state.text), {
+            if (this.state.editZone) {
+                var editZone;
+
+                if (typeof this.state.editZone === 'function') {
+                    editZone = this.state.editZone(text);
+                } else {
+                    editZone = this.state.editZone;
+                }
+
+                return _react2.default.createElement(
+                    'span',
+                    {
+                        onMouseOut: function onMouseOut() {
+                            return _this2.setState({ isOver: false });
+                        },
+                        onChange: this._handleChange,
+                        onBlur: this._handleFocus,
+                        onKeyDown: this._handleKeyDown
+                    },
+                    editZone
+                );
+            } else {
+                return _react2.default.createElement('input', { type: 'text',
+                    value: text,
                     onMouseOut: function onMouseOut() {
                         return _this2.setState({ isOver: false });
                     },
@@ -1325,29 +1319,57 @@ var Editable = function (_React$Component) {
                     onKeyDown: this._handleKeyDown,
                     autoFocus: true
                 });
+            }
+        }
+    }, {
+        key: '_getNormalZone',
+        value: function _getNormalZone(text) {
+            var _this3 = this;
+
+            var zone = this.props.children || text;
+            var style = {
+                cursor: 'pointer'
+            };
+
+            if (typeof zone !== 'string') {
+                style.display = 'inherit';
+            }
+
+            var props = {
+                className: this.props.className,
+                onMouseOver: function onMouseOver() {
+                    _this3.state.isEditable && _this3.setState({ isOver: true });
+                },
+                onMouseOut: function onMouseOut() {
+                    _this3.setState({ isOver: false });
+                },
+                onClick: this._handleFocus,
+                style: style
+            };
+
+            if (this.state.isOver) {
+                return _react2.default.createElement(
+                    'mark',
+                    props,
+                    zone
+                );
+            } else {
+                return _react2.default.createElement(
+                    'span',
+                    props,
+                    zone
+                );
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            if (this.state.isEditable && this.state.isEditing) {
+                return this._getEditZone(this.state.text);
             } else {
                 var text = this._isTextValueValid() ? this.state.text : this.props.labelPlaceHolder || DEFAULT_LABEL_PLACEHOLDER;
 
-                var label = _react2.default.cloneElement(this._getNormalZone(text), {
-                    className: this.props.labelClassName,
-                    onMouseOver: function onMouseOver() {
-                        _this2.state.isEditable && _this2.setState({ isOver: true });
-                    },
-                    onMouseOut: function onMouseOut() {
-                        _this2.setState({ isOver: false });
-                    },
-                    onClick: this._handleFocus
-                });
-
-                if (this.state.isOver) {
-                    return _react2.default.createElement(
-                        'mark',
-                        null,
-                        label
-                    );
-                } else {
-                    return label;
-                }
+                return this._getNormalZone(text);
             }
         }
     }]);
