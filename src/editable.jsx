@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ENTER_KEY_CODE = 13;
+const ESCAPE_KEY_CODE = 27;
 const DEFAULT_LABEL_PLACEHOLDER = "Click To Edit";
 
 export default class Editable extends React.Component {
@@ -11,7 +12,9 @@ export default class Editable extends React.Component {
         this.state = {
             editZone: this.props.editZone,
             text: this.props.text || "",
+            originalText: this.props.text || "",
             validateOnEnterKey: this.props.validateOnEnterKey || (this.props.editZone === undefined),
+            cancelOnEscapeKey: this.props.cancelOnEscapeKey || (this.props.editZone === undefined),
             isEditable: this.props.isEditable != false,
         	isEditing: this.props.isEditing || false,
             isOver: false,
@@ -20,13 +23,16 @@ export default class Editable extends React.Component {
         this._handleFocus = this._handleFocus.bind(this);
         this._handleChange = this._handleChange.bind(this);
         this._handleKeyDown = this._handleKeyDown.bind(this);
+        this._handleClickOutside = this._handleClickOutside.bind(this);
+        this._refEditZone = this._refEditZone.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             editZone: nextProps.editZone,
             text: nextProps.text || "",
-            validateOnEnterKey: this.props.validateOnEnterKey || (nextProps.editZone === undefined),
+            validateOnEnterKey: nextProps.validateOnEnterKey || (nextProps.editZone === undefined),
+            cancelOnEscapeKey: nextProps.cancelOnEscapeKey || (nextProps.editZone === undefined),
             isEditable: nextProps.isEditable != false,
             isEditing: this.state.isEditing || nextProps.isEditing || false
         });
@@ -46,39 +52,83 @@ export default class Editable extends React.Component {
             this.props.onFocus(this.state.text);
         }
 
+        var isEditing;
+
         if (this._isTextValueValid()) {
-            this.setState({
-                isEditing: !this.state.isEditing,
-            });
+            isEditing = !this.state.isEditing;
         }
         else if (this.state.isEditing) {
+            isEditing = this.props.emptyEdit || false;
+        }
+        else {
+            isEditing = true;
+        }
+
+        if (!this.state.isEditing && isEditing) {
             this.setState({
-                isEditing: this.props.emptyEdit || false
+                originalText: this.state.text
             });
+
+            document.addEventListener('mousedown', this._handleClickOutside);
+        }
+
+        this.setState({
+            isEditing: isEditing
+        });
+    }
+
+    _handleClickOutside(e) {
+        console.log("editZone: ", this.editZone)
+        if (this.editZone && !this.editZone.contains(e.target)) {
+            document.removeEventListener('mousedown', this._handleClickOutside);
+            this._handleFocus();
+        }
+    }
+
+    onChange(text) {
+        if (this.props.onChange) {
+            this.props.onChange(text);
         }
         else {
             this.setState({
-                isEditing: true
+                text: text
             });
         }
     }
 
-    _handleChange() {
-    	this.setState({
-        	text: this.textInput.value,
-        });
+    _handleChange(e) {
+        this.onChange(e.target.value);
     }
 
     _handleKeyDown(e) {
         if (this.state.validateOnEnterKey && e.keyCode === ENTER_KEY_CODE) {
-            console.log(e, e.keyCode)
             this._handleEnterKey();
+        }
+        else if (this.state.cancelOnEscapeKey && e.keyCode === ESCAPE_KEY_CODE) {
+            this._handleEscapeKey();
         }
     }
 
     _handleEnterKey() {
+        this.setState({
+            originalText: this.state.text
+        });
+
         this._handleFocus();
     }
+
+    _handleEscapeKey() {
+        this.setState({
+            text: this.state.originalText
+        });
+
+        this.onChange(this.state.originalText);
+        this._handleFocus();
+    }
+
+    _refEditZone(element) {
+      this.editZone = element;
+    };
 
     _getEditZone(text) {
         if (this.state.editZone) {
@@ -94,9 +144,7 @@ export default class Editable extends React.Component {
             return (
                 <span
                     onMouseOut={() => this.setState({ isOver: false })}
-                    onChange={ this._handleChange }
-                    onBlur={ this._handleFocus }
-                    onKeyDown={ this._handleKeyDown }
+                    ref={(ref) => { this.editZone = ref }}
                 >
                     { editZone }
                 </span>
@@ -110,6 +158,7 @@ export default class Editable extends React.Component {
                     onChange={ this._handleChange }
                     onBlur={ this._handleFocus }
                     onKeyDown={ this._handleKeyDown }
+                    ref={(ref) => { this.editZone = ref }}
                     autoFocus
                 />
             );

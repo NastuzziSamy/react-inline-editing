@@ -1196,6 +1196,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ENTER_KEY_CODE = 13;
+var ESCAPE_KEY_CODE = 27;
 var DEFAULT_LABEL_PLACEHOLDER = "Click To Edit";
 
 var Editable = function (_React$Component) {
@@ -1209,7 +1210,9 @@ var Editable = function (_React$Component) {
         _this.state = {
             editZone: _this.props.editZone,
             text: _this.props.text || "",
+            originalText: _this.props.text || "",
             validateOnEnterKey: _this.props.validateOnEnterKey || _this.props.editZone === undefined,
+            cancelOnEscapeKey: _this.props.cancelOnEscapeKey || _this.props.editZone === undefined,
             isEditable: _this.props.isEditable != false,
             isEditing: _this.props.isEditing || false,
             isOver: false
@@ -1218,6 +1221,8 @@ var Editable = function (_React$Component) {
         _this._handleFocus = _this._handleFocus.bind(_this);
         _this._handleChange = _this._handleChange.bind(_this);
         _this._handleKeyDown = _this._handleKeyDown.bind(_this);
+        _this._handleClickOutside = _this._handleClickOutside.bind(_this);
+        _this._refEditZone = _this._refEditZone.bind(_this);
         return _this;
     }
 
@@ -1227,7 +1232,8 @@ var Editable = function (_React$Component) {
             this.setState({
                 editZone: nextProps.editZone,
                 text: nextProps.text || "",
-                validateOnEnterKey: this.props.validateOnEnterKey || nextProps.editZone === undefined,
+                validateOnEnterKey: nextProps.validateOnEnterKey || nextProps.editZone === undefined,
+                cancelOnEscapeKey: nextProps.cancelOnEscapeKey || nextProps.editZone === undefined,
                 isEditable: nextProps.isEditable != false,
                 isEditing: this.state.isEditing || nextProps.isEditing || false
             });
@@ -1248,39 +1254,85 @@ var Editable = function (_React$Component) {
                 this.props.onFocus(this.state.text);
             }
 
+            var isEditing;
+
             if (this._isTextValueValid()) {
-                this.setState({
-                    isEditing: !this.state.isEditing
-                });
+                isEditing = !this.state.isEditing;
             } else if (this.state.isEditing) {
+                isEditing = this.props.emptyEdit || false;
+            } else {
+                isEditing = true;
+            }
+
+            if (!this.state.isEditing && isEditing) {
                 this.setState({
-                    isEditing: this.props.emptyEdit || false
+                    originalText: this.state.text
                 });
+
+                document.addEventListener('mousedown', this._handleClickOutside);
+            }
+
+            this.setState({
+                isEditing: isEditing
+            });
+        }
+    }, {
+        key: '_handleClickOutside',
+        value: function _handleClickOutside(e) {
+            console.log("editZone: ", this.editZone);
+            if (this.editZone && !this.editZone.contains(e.target)) {
+                document.removeEventListener('mousedown', this._handleClickOutside);
+                this._handleFocus();
+            }
+        }
+    }, {
+        key: 'onChange',
+        value: function onChange(text) {
+            if (this.props.onChange) {
+                this.props.onChange(text);
             } else {
                 this.setState({
-                    isEditing: true
+                    text: text
                 });
             }
         }
     }, {
         key: '_handleChange',
-        value: function _handleChange() {
-            this.setState({
-                text: this.textInput.value
-            });
+        value: function _handleChange(e) {
+            this.onChange(e.target.value);
         }
     }, {
         key: '_handleKeyDown',
         value: function _handleKeyDown(e) {
             if (this.state.validateOnEnterKey && e.keyCode === ENTER_KEY_CODE) {
-                console.log(e, e.keyCode);
                 this._handleEnterKey();
+            } else if (this.state.cancelOnEscapeKey && e.keyCode === ESCAPE_KEY_CODE) {
+                this._handleEscapeKey();
             }
         }
     }, {
         key: '_handleEnterKey',
         value: function _handleEnterKey() {
+            this.setState({
+                originalText: this.state.text
+            });
+
             this._handleFocus();
+        }
+    }, {
+        key: '_handleEscapeKey',
+        value: function _handleEscapeKey() {
+            this.setState({
+                text: this.state.originalText
+            });
+
+            this.onChange(this.state.originalText);
+            this._handleFocus();
+        }
+    }, {
+        key: '_refEditZone',
+        value: function _refEditZone(element) {
+            this.editZone = element;
         }
     }, {
         key: '_getEditZone',
@@ -1302,9 +1354,9 @@ var Editable = function (_React$Component) {
                         onMouseOut: function onMouseOut() {
                             return _this2.setState({ isOver: false });
                         },
-                        onChange: this._handleChange,
-                        onBlur: this._handleFocus,
-                        onKeyDown: this._handleKeyDown
+                        ref: function ref(_ref) {
+                            _this2.editZone = _ref;
+                        }
                     },
                     editZone
                 );
@@ -1317,6 +1369,9 @@ var Editable = function (_React$Component) {
                     onChange: this._handleChange,
                     onBlur: this._handleFocus,
                     onKeyDown: this._handleKeyDown,
+                    ref: function ref(_ref2) {
+                        _this2.editZone = _ref2;
+                    },
                     autoFocus: true
                 });
             }
