@@ -1381,38 +1381,42 @@ var Editable = function (_React$Component) {
             var _this3 = this;
 
             var zone = this.props.children || text;
-            var style = {
+            var style = this.state.isEditable ? {
                 cursor: 'pointer'
-            };
+            } : {};
 
             if (typeof zone !== 'string') {
                 style.display = 'inherit';
             }
 
-            var props = {
-                className: this.props.className,
-                onMouseOver: function onMouseOver() {
-                    _this3.state.isEditable && _this3.setState({ isOver: true });
-                },
-                onMouseOut: function onMouseOut() {
-                    _this3.setState({ isOver: false });
-                },
-                onClick: this._handleFocus,
-                style: style
-            };
+            if (this.state.isEditable) {
+                var props = {
+                    className: this.props.className,
+                    onMouseOver: function onMouseOver() {
+                        _this3.state.isEditable && _this3.setState({ isOver: true });
+                    },
+                    onMouseOut: function onMouseOut() {
+                        _this3.setState({ isOver: false });
+                    },
+                    onClick: this._handleFocus,
+                    style: style
+                };
 
-            if (this.state.isOver) {
-                return _react2.default.createElement(
-                    'mark',
-                    props,
-                    zone
-                );
+                if (this.state.isOver) {
+                    return _react2.default.createElement(
+                        'mark',
+                        props,
+                        zone
+                    );
+                } else {
+                    return _react2.default.createElement(
+                        'span',
+                        props,
+                        zone
+                    );
+                }
             } else {
-                return _react2.default.createElement(
-                    'span',
-                    props,
-                    zone
-                );
+                return zone;
             }
         }
     }, {

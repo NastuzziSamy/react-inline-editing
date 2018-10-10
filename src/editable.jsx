@@ -166,39 +166,44 @@ export default class Editable extends React.Component {
 
     _getNormalZone(text) {
         const zone = this.props.children || text;
-        var style = {
+        var style = this.state.isEditable ? {
             cursor: 'pointer',
-        };
+        } : {};
 
         if (typeof zone !== 'string') {
             style.display = 'inherit';
         }
 
-        const props = {
-            className: this.props.className,
-            onMouseOver: () => { this.state.isEditable && this.setState({ isOver: true }) },
-            onMouseOut: () => { this.setState({ isOver: false }) },
-            onClick: this._handleFocus,
-            style: style
-        };
+        if (this.state.isEditable) {
+            const props = {
+                className: this.props.className,
+                onMouseOver: () => { this.state.isEditable && this.setState({ isOver: true }) },
+                onMouseOut: () => { this.setState({ isOver: false }) },
+                onClick: this._handleFocus,
+                style: style
+            };
 
-        if (this.state.isOver) {
-            return (
-                <mark
-                    { ...props }
-                >
-                    { zone }
-                </mark>
-            );
+            if (this.state.isOver) {
+                return (
+                    <mark
+                        { ...props }
+                        >
+                        { zone }
+                    </mark>
+                );
+            }
+            else {
+                return (
+                    <span
+                        { ...props }
+                        >
+                        { zone }
+                    </span>
+                );
+            }
         }
         else {
-            return (
-                <span
-                    { ...props }
-                >
-                    { zone }
-                </span>
-            );
+            return zone;
         }
     }
 
