@@ -78,7 +78,6 @@ export default class Editable extends React.Component {
     }
 
     _handleClickOutside(e) {
-        console.log("editZone: ", this.editZone)
         if (this.editZone && !this.editZone.contains(e.target)) {
             document.removeEventListener('mousedown', this._handleClickOutside);
             this._handleFocus();
@@ -220,6 +219,8 @@ Editable.propTypes = {
     isEditing: PropTypes.bool,
     isEditable: PropTypes.bool,
     emptyEdit: PropTypes.bool,
+    validateOnEnterKey: PropTypes.bool,
+    cancelOnEscapeKey: PropTypes.bool,
     labelPlaceHolder: PropTypes.string,
 
     labelClassName: PropTypes.string,
